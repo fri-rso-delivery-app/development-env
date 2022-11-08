@@ -12,6 +12,9 @@ services:
     
     ports:
       - 27017:27017
+    
+    volumes:
+      - ./data/mongo_db:/data/db
 
   # mongo management util
   mongo-express:
