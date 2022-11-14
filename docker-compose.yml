@@ -28,7 +28,7 @@ services:
       API_SECRET_KEY: "${API_SECRET_KEY}"
       API_TOKEN_EXPIRE_MIN: "60"
   
-  # auth
+  # "todo" example microservice
   todo-example:
     build: ./services/todo-example-microservice
     restart: always
