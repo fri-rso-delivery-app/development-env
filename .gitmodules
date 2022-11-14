@@ -1,0 +1,6 @@
+[submodule "services/auth-service"]
+	path = services/auth-service
+	url = git@github.com:fri-rso-delivery-app/auth-service.git
+[submodule "services/todo-example-microservice"]
+	path = services/todo-example-microservice
+	url = git@github.com:fri-rso-delivery-app/todo-example-microservice.git
