@@ -16,7 +16,9 @@ services:
     volumes:
       - ./data/mongo_db:/data/db
   
-  # mertics
+  #
+  # Mertics
+  #
   prometheus:
     image: prom/prometheus
     ports:
@@ -41,6 +43,10 @@ services:
       - ./grafana_ds.yml:/etc/grafana/provisioning/datasources/grafana_ds.yml
       - ./data/grafana:/var/lib/grafana
     user: "$UID:$GID"
+  
+  #
+  # Microservices
+  #
 
   # auth
   auth:
@@ -76,6 +82,10 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
+  
+  #
+  # Router
+  #
   
   router:
     build: ./router/
