@@ -26,9 +26,9 @@ scrape_configs:
   - job_name: 'auth'
     scrape_interval: 5s
     static_configs:
-      - targets: ['auth:8080']
+      - targets: ['app-auth:8080']
   
   - job_name: 'todo-example'
     scrape_interval: 5s
     static_configs:
-      - targets: ['todo-example:8080']
+      - targets: ['app-todo-example:8080']

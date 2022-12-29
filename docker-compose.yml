@@ -1,3 +1,14 @@
+x-logging: &default-logging
+  driver: loki
+  options:
+    loki-url: 'http://localhost:3100/api/prom/push'
+    loki-pipeline-stages: |
+      - multiline:
+          firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+          max_wait_time: 3s
+      - regex:
+          expression: '^(?P<time>\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2},d{3}) (?P<message>(?s:.*))$$'
+
 version: '3.1'
 
 services:
@@ -35,21 +46,47 @@ services:
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
+  #logs
+  loki:
+    image: grafana/loki:2.6.1
+    ports:
+      - 3100:3100
+    command: -config.file=/mnt/loki/loki-config.yml
+    volumes:
+      - ./loki-config.yml:/mnt/loki/loki-config.yml
+  #traces
+  tempo:
+    image: grafana/tempo:1.5.0
+    command: [ "--target=all", "--storage.trace.backend=local", "--storage.trace.local.path=/var/tempo", "--auth.enabled=false", "--search.enabled=true" ]
+    ports:
+      - "14250:14250"
+      - "4317:4317" # for debugging
+    depends_on:
+      - loki
+    logging: *default-logging
   grafana:
-    image: grafana/grafana-oss:8.2.6
+    image: grafana/grafana:9.1.7
     ports:
       - 3000:3000
     volumes:
       - ./grafana_ds.yml:/etc/grafana/provisioning/datasources/grafana_ds.yml
-      - ./data/grafana:/var/lib/grafana
-    user: "$UID:$GID"
+      - ./grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./grafana/dashboards:/etc/grafana/dashboards
+    depends_on:
+      - loki
+      - prometheus
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    logging: *default-logging
   
   #
   # Microservices
   #
 
   # auth
-  auth:
+  app-auth:
     build: ./services/auth-service
     restart: always
     environment:
@@ -57,6 +94,7 @@ services:
       API_HTTP_PORT: "8080"
       API_DB_NAME: "auth_service"
       API_TOKEN_EXPIRE_MIN: "60"
+    logging: *default-logging
     volumes:
       - "./.env:/app/.env"
     healthcheck:
@@ -67,13 +105,14 @@ services:
       timeout: 10s
   
   # "todo" example microservice
-  todo-example:
+  app-todo-example:
     build: ./services/todo-example-microservice
     restart: always
     environment:
       API_ROOT_PATH: "/api/v1/todo"
       API_HTTP_PORT: "8080"
       API_DB_NAME: "todo_service"
+    logging: *default-logging
     volumes:
       - "./.env:/app/.env"
     healthcheck:
@@ -92,5 +131,5 @@ services:
     ports:
         - "8080:80"
     depends_on:
-        - auth
-        - todo-example
+        - app-auth
+        - app-todo-example
