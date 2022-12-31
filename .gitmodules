@@ -4,3 +4,6 @@
 [submodule "services/todo-example-microservice"]
 	path = services/todo-example-microservice
 	url = git@github.com:fri-rso-delivery-app/todo-example-microservice.git
+[submodule "services/maps-distance-service"]
+	path = services/maps-distance-service
+	url = git@github.com:fri-rso-delivery-app/maps-distance-service.git
