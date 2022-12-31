@@ -32,3 +32,8 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['app-todo-example:8080']
+  
+  - job_name: 'maps'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['app-maps:8080']
