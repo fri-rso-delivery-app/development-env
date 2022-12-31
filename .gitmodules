@@ -7,3 +7,9 @@
 [submodule "services/maps-distance-service"]
 	path = services/maps-distance-service
 	url = git@github.com:fri-rso-delivery-app/maps-distance-service.git
+[submodule "web-ui"]
+	path = web-ui
+	url = git@github.com:fri-rso-delivery-app/web-ui.git
+[submodule "services/web-ui"]
+	path = services/web-ui
+	url = git@github.com:fri-rso-delivery-app/web-ui.git
