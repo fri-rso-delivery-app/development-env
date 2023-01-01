@@ -37,3 +37,8 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['app-maps:8080']
+  
+  - job_name: 'packets'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['app-packets:8080']

@@ -13,3 +13,6 @@
 [submodule "services/web-ui"]
 	path = services/web-ui
 	url = git@github.com:fri-rso-delivery-app/web-ui.git
+[submodule "services/packets-service"]
+	path = services/packets-service
+	url = git@github.com:fri-rso-delivery-app/package-service.git
